@@ -22,6 +22,15 @@ public class PlayerControl : MonoBehaviour
     //skor pemain
     private int score;
 
+    //titik tumbukan terakhir dengan bola, untuk menampilakan variabel-variabel fisika terkait tumbukan tersebut
+    private ContactPoint2D lasContactPoint;
+
+    //untuk mengankses informasi titik kontak dari kelas lain
+    public ContactPoint2D LastContactPoint
+    {
+        get { return lasContactPoint; }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +44,7 @@ public class PlayerControl : MonoBehaviour
         Vector2 velocity = rigidbody2D.velocity;
 
         //jika pemain mencet atas
-        if (Input.GetKeyDown(upButton))
+        if (Input.GetKey(upButton))
         {
             velocity.y = speed;
         }
@@ -71,7 +80,7 @@ public class PlayerControl : MonoBehaviour
         transform.position = position;
     }
 
-    public void IcrementScore()
+    public void IncrementScore()
     {
         score++;
     }
@@ -86,5 +95,14 @@ public class PlayerControl : MonoBehaviour
     public int Score
     {
         get { return score; }
+    }
+
+    //Ketika terjadi tubukan  dengan bola, rekam titik kontaknya
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.name.Equals("Ball"))
+        {
+            lasContactPoint = collision.GetContact(0);
+        }
     }
 }

@@ -10,6 +10,10 @@ public class BallControl : MonoBehaviour
     //besarnya gaya awal mendorong bola
     public float xInitialForce;
     public float yInitialForce;
+
+    //titik asal lintasa bola saat ini
+    private Vector2 trajectoryOrigin;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +21,8 @@ public class BallControl : MonoBehaviour
 
         //mulai game
         RestartGame();
+
+        trajectoryOrigin = transform.position;
     }
 
     void ResetBall()
@@ -40,11 +46,11 @@ public class BallControl : MonoBehaviour
         if (randomDirection < 1.0f)
         {
             //gunakan gaya untuk menggerakkna bola ini
-            rigidBody2D.AddForce(new Vector2(-xInitialForce, yRandomInitialForce));
+            rigidBody2D.AddRelativeForce(new Vector2(-xInitialForce, yRandomInitialForce));
         }
         else
         {
-            rigidBody2D.AddForce(new Vector2(xInitialForce, yRandomInitialForce));
+            rigidBody2D.AddRelativeForce(new Vector2(xInitialForce, yRandomInitialForce));
         }
     }
     void RestartGame()
@@ -55,4 +61,17 @@ public class BallControl : MonoBehaviour
         //setelah 2 detik , berikan gaya ke bola
         Invoke("PushBall", 2);
     }
+
+    //ketika bola beranjak dari sebuah tumbukan, titik tumbukan tersebut
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        trajectoryOrigin = transform.position;
+    }
+
+    //Untuk mengakses informasi titika asal lintasan
+    public Vector2 TrajectoryOrigin
+    {
+        get { return trajectoryOrigin; }
+    }
 }
+
